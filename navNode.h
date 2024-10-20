@@ -1,5 +1,5 @@
-#ifndef NAVMESH_H
-#define NAVMESH_H
+#ifndef NAVNODE_H
+#define NAVNODE_H
 
 // dtoolbase.h defines the PUBLISHED macro if the CPPPARSER macro is defined
 #include "dtoolbase.h"
@@ -7,19 +7,14 @@
 #include "nodePath.h"
 #include "lpoint3.h"
 
-#include "navNode.h"
-#include "navEdge.h"
-
-class EXPORT_CLASS NavMesh {
+class EXPORT_CLASS NavNode {
 PUBLISHED:
 // These methods are publicly accessible to Python and C++
 
-    NavMesh();
-    ~NavMesh() {};
+    NavNode( LVector3f pos, float max_size = 99999 );
+    ~NavNode() {};
 
-    NavNode* add_node( LVector3f pos );
-
-    void fill_from_geom();
+    LVector3f get_pos() { return this->pos; }
 
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
@@ -31,7 +26,8 @@ public:
 // C++-only methods:
 
 private:
-    std::vector<NavNode> nodes;
+    LVector3f pos;
+    float size;
 };
 
 #endif

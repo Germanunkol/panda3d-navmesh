@@ -1,10 +1,14 @@
 
 set(P3NAVMESH_HEADERS
   navMesh.h
+  navNode.h
+  navEdge.h
 )
 
 set(P3NAVMESH_SOURCES
   navMesh.cxx
+  navNode.cxx
+  navEdge.cxx
 )
 
 composite_sources(p3navmesh P3NAVMESH_SOURCES)
