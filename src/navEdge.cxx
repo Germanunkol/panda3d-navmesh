@@ -1,5 +1,5 @@
 
-#include "navEdge.h"
+#include "src/navEdge.h"
 
 NavEdge::NavEdge( NavNode* start_node, NavNode* end_node, float cost_factor )
     : start_node( start_node )

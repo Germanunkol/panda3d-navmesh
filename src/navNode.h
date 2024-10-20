@@ -16,6 +16,10 @@ PUBLISHED:
 
     LVector3f get_pos() { return this->pos; }
 
+    float get_cost() const { return this->g + this->h; }
+    void set_h( float h ) { this->h = h; }
+    void set_g( float g ) { this->g = g; }
+
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
 
@@ -28,6 +32,8 @@ public:
 private:
     LVector3f pos;
     float size;
+    float h;
+    float g;
 };
 
 #endif

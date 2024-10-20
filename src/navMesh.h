@@ -1,5 +1,5 @@
-#ifndef NAVEDGE_H
-#define NAVEDGE_H
+#ifndef NAVMESH_H
+#define NAVMESH_H
 
 // dtoolbase.h defines the PUBLISHED macro if the CPPPARSER macro is defined
 #include "dtoolbase.h"
@@ -7,16 +7,24 @@
 #include "nodePath.h"
 #include "lpoint3.h"
 
-#include "navNode.h"
+#include "src/navNode.h"
+#include "src/navEdge.h"
+#include "src/navPath.h"
 
-class EXPORT_CLASS NavEdge {
+class EXPORT_CLASS NavMesh {
 PUBLISHED:
 // These methods are publicly accessible to Python and C++
 
-    NavEdge( NavNode* start_node, NavNode* end_node, float cost_factor = 1 );
-    ~NavEdge() {};
+    NavMesh();
+    ~NavMesh() {};
 
-    float get_cost() { return this->cost; }
+    NavNode* add_node( LVector3f pos );
+
+    void fill_from_geom();
+
+    NavPath find_path( LVector3f start_pos, LVector3f end_pos );
+
+    NavNode find_nearest_node_at( LVector3f search_pos );
 
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
@@ -28,9 +36,7 @@ public:
 // C++-only methods:
 
 private:
-    NavNode* start_node;
-    NavNode* end_node;
-    float cost;
+    std::vector<NavNode> nodes;
 };
 
 #endif
