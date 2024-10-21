@@ -1,6 +1,8 @@
 #ifndef NAVPATH_H
 #define NAVPATH_H
 
+#include <queue>
+
 // dtoolbase.h defines the PUBLISHED macro if the CPPPARSER macro is defined
 #include "dtoolbase.h"
 
@@ -17,7 +19,8 @@ PUBLISHED:
     NavPath();
     ~NavPath() {};
 
-    void add_node( NavNode node );
+    void add_node_front( NavNode node );
+    void add_node_back( NavNode node );
     NavNode get_node( unsigned int i );
 
     unsigned int get_length() { return this->nodes.size(); }
@@ -25,8 +28,9 @@ PUBLISHED:
 public:
 // C++-only methods:
 
+
 private:
-    std::vector<NavNode> nodes;
+    std::deque<NavNode> nodes;
 };
 
 #endif

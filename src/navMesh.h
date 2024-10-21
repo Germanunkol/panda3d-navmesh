@@ -16,15 +16,19 @@ PUBLISHED:
 // These methods are publicly accessible to Python and C++
 
     NavMesh();
-    ~NavMesh() {};
+    ~NavMesh();
 
     NavNode* add_node( LVector3f pos );
 
-    void fill_from_geom();
+    //void fill_from_geom();    // Maybe TODO?
+    
+    /* Check that all nodes are connected to each other */
+    bool connectivity_check();
 
     NavPath find_path( LVector3f start_pos, LVector3f end_pos );
 
-    NavNode find_nearest_node_at( LVector3f search_pos );
+    NavNode* find_nearest_node_at( LVector3f search_pos );
+
 
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
@@ -36,7 +40,7 @@ public:
 // C++-only methods:
 
 private:
-    std::vector<NavNode> nodes;
+    std::vector<NavNode*> nodes;
 };
 
 #endif

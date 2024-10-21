@@ -1,3 +1,5 @@
+#include <limits>
+#include <unordered_set>
 
 #include "src/navMesh.h"
 #include "src/a_star.h"
@@ -6,37 +8,136 @@ NavMesh::NavMesh()
 {
 }
 
-NavNode* NavMesh::add_node( LVector3f pos )
+NavMesh::~NavMesh()
 {
-    NavNode node( pos );
-    this->nodes.push_back( node );
-    // Return the added node:
-    return &this->nodes.back();
+    for( auto it = this->nodes.begin(); it < this->nodes.end(); it ++ )
+    {
+        delete *it;
+    }
 }
 
-void NavMesh::fill_from_geom()
+NavNode* NavMesh::add_node( LVector3f pos )
 {
+    NavNode* node = new NavNode( pos );
+    this->nodes.push_back( node );
+    // Return the added node:
+    return node;
+}
+
+bool NavMesh::connectivity_check()
+{
+    /* Check if the graph is "strongly connected". This is the case if we can pick a node s and 
+     * - all nodes are reachable from node s and
+     * - s is reachable from all nodes. */
+    std::cout << "Checking that all nodes are connected..." << std::endl;
+
+    if( this->nodes.size() == 0 )
+        return true;
+
+    NavNode* start_node = this->nodes[0];
+  
+    // --------------------------- 
+    // Start by checking if all nodes can be reached from the start node:
+    std::unordered_set<NavNode*> open;
+    std::unordered_set<NavNode*> visited;
+    open.insert( start_node );
+
+    while( open.size() > 0 )
+    {
+        auto first = open.begin();
+        NavNode* current_node = *first;
+
+        for( size_t i = 0; i < current_node->num_downstream_neighbors(); i ++ )
+        {
+            NavNode* neighbor = current_node->get_downstream_neighbor( i );
+            // If the neighbor is neither in the visited set nor in the open set, add it to the open set:
+            if( visited.find( neighbor) == visited.end() && open.find( neighbor ) == open.end() )
+                open.insert( neighbor );
+        }
+
+        open.erase( current_node );
+        visited.insert( current_node );
+    }
+
+    if( this->nodes.size() > visited.size() )
+    {
+        std::cout << "\tCheck failed! The following nodes could not be reached from node 0:" << std::endl;
+        for( auto it = this->nodes.begin(); it != this->nodes.end(); it++ )
+        {
+            if( visited.find( *it ) == visited.end() )
+                std::cout << "\t\t" << **it << std::endl;
+        }
+        return false;
+    } else if ( this->nodes.size() < visited.size() ) {
+        std::cout << "\tCheck failed! Something wrong, looks like some nodes were reached multiple times?"
+                  << std::endl;
+        return false;
+    }
+
+    // Check again in the other direction, i.e. iterating the reversed graph, to see if the start node can
+    // be reached from all other nodes:
+    open.clear();
+    visited.clear();
+    open.insert( start_node );
+
+    while( open.size() > 0 )
+    {
+        auto first = open.begin();
+        NavNode* current_node = *first;
+
+        // This time, look at the _upstream_ neighbors!
+        for( size_t i = 0; i < current_node->num_upstream_neighbors(); i ++ )
+        {
+            NavNode* neighbor = current_node->get_upstream_neighbor( i );
+            // If the neighbor is neither in the visited set nor in the open set, add it to the open set:
+            if( visited.find( neighbor) == visited.end() && open.find( neighbor ) == open.end() )
+                open.insert( neighbor );
+        }
+
+        open.erase( current_node );
+        visited.insert( current_node );
+    }
+
+    if( this->nodes.size() > visited.size() )
+    {
+        std::cout << "\tCheck failed! From the following nodes we cannot reach node 0:" << std::endl;
+        for( auto it = this->nodes.begin(); it != this->nodes.end(); it++ )
+        {
+            if( visited.find( *it ) == visited.end() )
+                std::cout << "\t\t" << **it << std::endl;
+        }
+        return false;
+    } else if ( this->nodes.size() < visited.size() ) {
+        std::cout << "\tCheck failed! Something wrong, looks like some nodes were reached multiple times?"
+                  << std::endl;
+        return false;
+    }
+
+    std::cout << "\tCheck successful, NavMesh is valid!" << std::endl;
+    return true;
 }
 
 NavPath NavMesh::find_path( LVector3f start_pos, LVector3f end_pos )
 {
-    NavNode start_node = find_nearest_node_at( start_pos );
-    NavNode end_node = find_nearest_node_at( end_pos );
+    NavNode* start_node = find_nearest_node_at( start_pos );
+    NavNode* end_node = find_nearest_node_at( end_pos );
     return a_star::find_path( start_node, end_node );
 }
 
-NavNode NavMesh::find_nearest_node_at( LVector3f search_pos )
+NavNode* NavMesh::find_nearest_node_at( LVector3f search_pos )
 {
     // TODO! Replace this with KD-Tree search or similar
-    float min_dist = 999999;
-    NavNode closest = this->nodes[0];
+    float min_dist = std::numeric_limits<double>::infinity();
+    NavNode* closest = this->nodes[0];
     for( auto itr = this->nodes.begin(); itr != this->nodes.end(); itr++ )
     {
-        float dist = (search_pos - itr->get_pos()).length();
+        float dist = (search_pos - (*itr)->get_pos()).length();
         if( dist < min_dist )
         {
             closest = *itr;
+            min_dist = dist;
         }
     }
     return closest;
 }
+

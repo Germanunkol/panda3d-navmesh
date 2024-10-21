@@ -1,9 +1,8 @@
 
 #include "src/navEdge.h"
 
-NavEdge::NavEdge( NavNode* start_node, NavNode* end_node, float cost_factor )
-    : start_node( start_node )
-    , end_node( end_node )
+NavEdge::NavEdge( NavNode* end_node, float cost )
+    : end_node( end_node )
+    , cost( cost )
 {
-    this->cost = (end_node->get_pos() - start_node->get_pos()).length() * cost_factor;
 }

@@ -7,16 +7,20 @@
 #include "nodePath.h"
 #include "lpoint3.h"
 
-#include "src/navNode.h"
+//#include "src/navNode.h"
+class NavNode;
 
 class EXPORT_CLASS NavEdge {
+    /* Directed edge towards some target end node
+     */
 PUBLISHED:
 // These methods are publicly accessible to Python and C++
 
-    NavEdge( NavNode* start_node, NavNode* end_node, float cost_factor = 1 );
+    NavEdge( NavNode* end_node, float cost );
     ~NavEdge() {};
 
     float get_cost() { return this->cost; }
+    NavNode* get_end_node() { return this->end_node; }
 
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
@@ -28,7 +32,6 @@ public:
 // C++-only methods:
 
 private:
-    NavNode* start_node;
     NavNode* end_node;
     float cost;
 };

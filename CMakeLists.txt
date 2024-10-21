@@ -5,6 +5,7 @@ set(P3NAVMESH_HEADERS
   src/navEdge.h
   src/navPath.h
   src/a_star.h
+  src/openSet.h
 )
 
 set(P3NAVMESH_SOURCES

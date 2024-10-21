@@ -6,7 +6,7 @@
 
 namespace a_star {
 
-NavPath find_path( NavNode start_node, NavNode end_node );
+NavPath find_path( NavNode* start_node, NavNode* end_node );
 
 };
 
