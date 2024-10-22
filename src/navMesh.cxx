@@ -24,12 +24,21 @@ NavNode* NavMesh::add_node( LVector3f pos )
     return node;
 }
 
+void NavMesh::reset()
+{
+    std::cout << "Resetting all nodes. NOTE: Do this only for debugging purposes, it's unneccesarily slow!" << std::endl;
+    for( auto it = this->nodes.begin(); it < this->nodes.end(); it ++ )
+    {
+        (*it)->reset();
+    }
+}
+
 bool NavMesh::connectivity_check()
 {
     /* Check if the graph is "strongly connected". This is the case if we can pick a node s and 
      * - all nodes are reachable from node s and
      * - s is reachable from all nodes. */
-    std::cout << "Checking that all nodes are connected..." << std::endl;
+    std::cout << "Checking that all " << this->nodes.size() << " nodes are connected..." << std::endl;
 
     if( this->nodes.size() == 0 )
         return true;
@@ -114,14 +123,16 @@ bool NavMesh::connectivity_check()
     }
 
     std::cout << "\tCheck successful, NavMesh is valid!" << std::endl;
+
     return true;
 }
 
-NavPath NavMesh::find_path( LVector3f start_pos, LVector3f end_pos )
+NavPath NavMesh::find_path( LVector3f start_pos, LVector3f end_pos, size_t max_search_length )
 {
+    //this->reset();
     NavNode* start_node = find_nearest_node_at( start_pos );
     NavNode* end_node = find_nearest_node_at( end_pos );
-    return a_star::find_path( start_node, end_node );
+    return a_star::find_path( start_node, end_node, max_search_length );
 }
 
 NavNode* NavMesh::find_nearest_node_at( LVector3f search_pos )

@@ -23,8 +23,8 @@ std::string NavNode::__repr__() const
               ", size: " << this->size <<
               ", h: " << this->h <<
               ", g: " << this->g <<
-              ", neighbors ds: " << this->neighbor_edges_upstream.size() <<
-              ", neighbors us: " << this->neighbor_edges_upstream.size() <<
+              ", neighbors (ds): " << this->neighbor_edges_downstream.size() <<
+              ", neighbors (us): " << this->neighbor_edges_upstream.size() <<
               "]";
     return sstr.str();
 }
@@ -36,8 +36,8 @@ std::ostream& operator<<(std::ostream& os, const NavNode& n)
               ", size: " << n.size <<
               ", h: " << n.h <<
               ", g: " << n.g <<
-              ", neighbors: " << n.neighbor_edges_upstream.size() <<
-              ", neighbors us: " << n.neighbor_edges_upstream.size() <<
+              ", neighbors (ds): " << n.neighbor_edges_downstream.size() <<
+              ", neighbors (us): " << n.neighbor_edges_upstream.size() <<
               "]";
 }
 
@@ -96,5 +96,12 @@ bool NavNode::is_my_upstream_neighbor( NavNode* other )
     return false;
 }
 
+void NavNode::reset()
+{
+    this->h = std::numeric_limits<float>::infinity();
+    this->g = std::numeric_limits<float>::infinity();
+    this->parent = NULL;
+    this->open = false;
+}
 
 

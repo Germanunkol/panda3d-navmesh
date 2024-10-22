@@ -17,6 +17,30 @@ public:
         Container,
         Compare>::container_type::const_iterator const_iterator;
 
+    ~OpenSet()
+    {
+        for( auto it = this->c.begin(); it != this->c.end(); it++ )
+            (*it)->set_open( false );
+    }
+
+    void push( T&& value )
+    {
+        value->set_open( true );
+        this->std::priority_queue<T, Container, Compare>::push( value );
+    }
+    void push( const T& value )
+    {
+        value->set_open( true );
+        this->std::priority_queue<T, Container, Compare>::push( value );
+    }
+		
+    void pop()
+    {
+        T t = this->top();
+        t->set_open( false );
+        this->std::priority_queue<T, Container, Compare>::pop();
+    }
+
     const_iterator find(const T&val) const
     {
         auto first = this->c.cbegin();
@@ -28,9 +52,16 @@ public:
         return last;
     }
 
-    bool remove(const T& value)
+    /* Warning: May be slow!! */
+    bool contains(const T&val)
     {
-        /* From https://stackoverflow.com/a/36711682/1936575 */
+       return std::find(this->c.begin(), this->c.end(), val) != this->c.end();
+    }
+
+
+    /*bool remove(const T& value)
+    {
+        // From https://stackoverflow.com/a/36711682/1936575
         auto it = std::find(this->c.begin(), this->c.end(), value);
 
         if (it == this->c.end()) {
@@ -45,8 +76,10 @@ public:
             this->c.erase(it);
             std::make_heap(this->c.begin(), this->c.end(), this->comp);
         }
+
+        value->set_open( false );
         return true;
-    }
+    }*/
 
     void resort()
     {

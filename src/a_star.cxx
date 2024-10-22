@@ -38,12 +38,12 @@ NavPath backtrack( NavNode* current_node )
     return path;
 }
 
-NavPath find_path( NavNode* start_node, NavNode* end_node )
+NavPath find_path( NavNode* start_node, NavNode* end_node, size_t max_search_length )
 {
     OpenSet<NavNode*, std::vector<NavNode*>, NodeCostComparator> open_set;
     open_set.push( start_node );
-    start_node->set_open( true );
     start_node->set_g( 0 );
+	start_node->set_parent( NULL );		// important!
 
     #ifdef verbose
         std::cout << "Finding path" << std::endl;
@@ -61,8 +61,11 @@ NavPath find_path( NavNode* start_node, NavNode* end_node )
     {
         i += 1;
         #ifdef verbose
-            std::cout << "Iteration: " << i << std::endl;
+            std::cout << "Iteration: " << i << " closed nodes:" << closed.size() << " open nodes: " << open_set.size() << std::endl;
         #endif
+
+        if( i > 1e4 )
+            break;
 
         // Get the node with the minimum cost and remove it from the open set:
         NavNode* current_node = open_set.top();
@@ -72,10 +75,9 @@ NavPath find_path( NavNode* start_node, NavNode* end_node )
             std::cout << "Current node: " << *current_node << std::endl;
         #endif
 
-        current_node->set_open( false );
         closed.insert( current_node );
 
-        if( current_node == end_node )
+        if( current_node == end_node || i > max_search_length )
         {
             #ifdef verbose
                 std::cout << "Found end node!" << std::endl;
@@ -93,8 +95,9 @@ NavPath find_path( NavNode* start_node, NavNode* end_node )
             // Check if we already worked through this node:
             if( closed.find( new_node ) == closed.end() )
             {
-                // If not, conider adding it to the open set!
-                if( !new_node->is_open() )
+                // If not, consider adding it to the open set!
+                //if( !new_node->is_open() )
+                if( !open_set.contains( new_node ) )
                 {
                     float h = (end_node->get_pos() - new_node->get_pos()).length();
                     new_node->set_h( h );
@@ -104,7 +107,6 @@ NavPath find_path( NavNode* start_node, NavNode* end_node )
                    
                     // Add to open list: 
                     open_set.push( new_node );
-                    new_node->set_open( true );
                     #ifdef verbose
                         std::cout << "\tNode is not open. Adding to open set" << std::endl;
                     #endif
@@ -115,13 +117,20 @@ NavPath find_path( NavNode* start_node, NavNode* end_node )
                     #endif
                     if( new_node->get_g() > new_g )
                     {
+						#ifdef verbose
+							std::cout << "\t\tUpdating g" << std::endl;
+						#endif
                         new_node->set_g( new_g );
                         new_node->set_parent( current_node );
                         // Because we changed the g (and thus the cost), we must re-sort:
                         open_set.resort();
                     }
                 }
-            } 
+            } else {
+				#ifdef verbose
+					std::cout << "\tNode already closed!" << std::endl;
+				#endif
+	    	}
         }
     }
 

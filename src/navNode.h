@@ -55,6 +55,9 @@ PUBLISHED:
 
     std::string __repr__() const;
 
+    /* Resets all values that were set during a search */
+    void reset();
+
     friend std::ostream& operator<<(std::ostream& os, const NavNode& n);
     /*LPoint3f get_pos() { return this->position; }
     void set_pos( LPoint3f position ) { this->position = position; }
