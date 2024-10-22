@@ -8,7 +8,7 @@
 #include "src/navEdge.h"
 #include "src/openSet.h"
 
-//#define verbose
+#define verbose
 
 namespace a_star {
 
@@ -33,6 +33,9 @@ NavPath backtrack( NavNode* current_node )
     while( current_node != NULL )
     {
         path.add_node_front( *current_node );
+        #ifdef verbose
+        std::cout << "Adding node to front of path: " << *current_node << std::endl;
+        #endif
         current_node = current_node->get_parent();
     }
     return path;
@@ -49,6 +52,7 @@ NavPath find_path( NavNode* start_node, NavNode* end_node, size_t max_search_len
         std::cout << "Finding path" << std::endl;
         std::cout << "\tfrom: " << *start_node << std::endl;
         std::cout << "\tto: " << *end_node << std::endl;
+        std::cout << "\tmax search iterations: " << max_search_length << std::endl;
     #endif
 
     // Probably a NOP, but for clarity:
@@ -80,7 +84,10 @@ NavPath find_path( NavNode* start_node, NavNode* end_node, size_t max_search_len
         if( current_node == end_node || i > max_search_length )
         {
             #ifdef verbose
-                std::cout << "Found end node!" << std::endl;
+                if( current_node == end_node )
+                    std::cout << "Found end node!" << std::endl;
+                else
+                    std::cout << "Maximum of iterations reached ending search, returning partial path!" << std::endl;
             #endif
             return backtrack( current_node );
         }

@@ -20,6 +20,11 @@ NavNode* NavMesh::add_node( LVector3f pos )
 {
     NavNode* node = new NavNode( pos );
     this->nodes.push_back( node );
+
+    // Warning! If we ever add a node-remove function, we also need to remove the node from
+    // the tree!
+    this->node_searchtree.insert( pos, node );
+
     // Return the added node:
     return node;
 }
@@ -137,18 +142,10 @@ NavPath NavMesh::find_path( LVector3f start_pos, LVector3f end_pos, size_t max_s
 
 NavNode* NavMesh::find_nearest_node_at( LVector3f search_pos )
 {
-    // TODO! Replace this with KD-Tree search or similar
-    float min_dist = std::numeric_limits<double>::infinity();
-    NavNode* closest = this->nodes[0];
-    for( auto itr = this->nodes.begin(); itr != this->nodes.end(); itr++ )
-    {
-        float dist = (search_pos - (*itr)->get_pos()).length();
-        if( dist < min_dist )
-        {
-            closest = *itr;
-            min_dist = dist;
-        }
-    }
-    return closest;
+    if( this->nodes.size() == 0 )
+        return NULL;
+    else
+        return this->node_searchtree.search( search_pos );
 }
+
 

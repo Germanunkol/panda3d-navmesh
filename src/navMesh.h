@@ -10,6 +10,7 @@
 #include "src/navNode.h"
 #include "src/navEdge.h"
 #include "src/navPath.h"
+#include "src/kdTree.h"
 
 class EXPORT_CLASS NavMesh {
 PUBLISHED:
@@ -46,6 +47,8 @@ public:
 
 private:
     std::vector<NavNode*> nodes;
+
+    KDTree<NavNode*> node_searchtree;
 };
 
 #endif
