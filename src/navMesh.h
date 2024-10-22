@@ -31,7 +31,7 @@ PUBLISHED:
     NavPath find_path(
             LVector3f start_pos,
             LVector3f end_pos,
-            size_t max_search_length = std::numeric_limits<size_t>::infinity() );
+            size_t max_search_length = std::numeric_limits<size_t>::max() );
 
     NavNode* find_nearest_node_at( LVector3f search_pos );
 
