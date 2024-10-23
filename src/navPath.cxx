@@ -37,11 +37,15 @@ void NavPath::add_node_front( NavNode node )
 
 NavNode* NavPath::get_node( size_t i )
 {
+    if( i >= this->nodes.size() )
+        throw std::invalid_argument( "Index error in NavPath::get_node(). Requested node past end of path!" );
     return &this->nodes[i];
 }
 
 NavNode* NavPath::operator[]( size_t i )
 {
+    if( i >= this->nodes.size() )
+        throw std::invalid_argument( "Index error in NavPath::operator[]. Requested node past end of path!" );
     return &this->nodes[i];
 }
 
