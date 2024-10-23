@@ -141,8 +141,8 @@ NavPath NavMesh::find_path( LPoint3f start_pos, LPoint3f end_pos, size_t max_sea
 NavNode* NavMesh::find_closest_node( LPoint3f search_pos )
 {
     // TODO! Replace this with KD-Tree search or similar
-    float min_dist = std::numeric_limits<double>::infinity();
-    NavNode* closest = this->nodes[0];
+    float min_dist = std::numeric_limits<float>::infinity();
+    NavNode* closest = NULL;
     for( auto itr = this->nodes.begin(); itr != this->nodes.end(); itr++ )
     {
         float dist = (search_pos - (*itr)->get_pos()).length();

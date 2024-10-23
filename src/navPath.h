@@ -30,6 +30,8 @@ PUBLISHED:
 
     void raise_path( float height );
 
+    std::string __repr__() const;
+
     //void smooth_path();
 
 public:

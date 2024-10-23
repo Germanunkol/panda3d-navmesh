@@ -54,4 +54,12 @@ void NavPath::raise_path( float height )
     }
 }
 
+std::string NavPath::__repr__() const
+{
+    std::stringstream sstr;
+    sstr << "[Path: (length: " << this->nodes.size() << ")" << std::endl;
+    for( auto it = this->nodes.begin(); it != this->nodes.end(); it++ )
+        sstr << "\t" << *it << std::endl;
 
+    return sstr.str();
+}

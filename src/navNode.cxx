@@ -6,6 +6,7 @@
 
 NavNode::NavNode( LPoint3f pos, LVector3f normal, float size )
     : pos( pos )
+    , forward_pos( pos )    // Default, set better value when this is added to path
     , normal( normal )
     , forward_dir( LVector3f::zero() )
     , size( size )
@@ -106,4 +107,10 @@ void NavNode::reset()
     this->open = false;
 }
 
+void NavNode::set_forward_dir( LVector3f f )
+{
+    // Note: This should be set once, then when path is raised the forward_pos/dir should _not_ be set again!
+    this->forward_dir = f;
+    this->forward_pos = this->pos + this->forward_dir;
+}
 

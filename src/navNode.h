@@ -30,8 +30,11 @@ PUBLISHED:
     NavNode* get_parent() { return this->parent; }
     void set_parent( NavNode* parent ) { this->parent = parent; }
 
+    // Note: This should be set once, then when path is raised the forward_pos/dir should _not_ be set again!
     LVector3f get_forward_dir() { return this->forward_dir; }
-    void set_forward_dir( LVector3f f ) { this->forward_dir = f; }
+    void set_forward_dir( LVector3f f );
+    //void set_forward_pos( LPoint3f pos ) { this->forward_pos = pos; }
+    LPoint3f get_forward_pos() { return this->forward_pos; }
 
     /* Denote that neighbor can be reached from this node
      *
@@ -74,6 +77,7 @@ public:
 private:
 
     LPoint3f pos;
+    LPoint3f forward_pos;
     LVector3f normal;
     LVector3f forward_dir;
     float size;
