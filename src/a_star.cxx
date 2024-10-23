@@ -8,7 +8,7 @@
 #include "src/navEdge.h"
 #include "src/openSet.h"
 
-#define verbose
+//#define verbose
 
 namespace a_star {
 

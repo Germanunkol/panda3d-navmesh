@@ -88,6 +88,7 @@ private:
 
     Elem<T>* search_rec( Elem<T>* root, LVector3f point, unsigned depth )
     {
+        std::cout << "search_rec" << root << " " << point << " " << depth << std::endl;
         // Base cases
         if (root == NULL)
             return NULL;

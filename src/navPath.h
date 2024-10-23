@@ -21,9 +21,16 @@ PUBLISHED:
 
     void add_node_front( NavNode node );
     void add_node_back( NavNode node );
-    NavNode get_node( unsigned int i );
+    NavNode* get_node( size_t i );
+    //NavNode* get_node_cleaned( size_t i );
 
     unsigned int get_length() { return this->nodes.size(); }
+
+    NavNode* operator[](size_t);
+
+    void raise_path( float height );
+
+    //void smooth_path();
 
 public:
 // C++-only methods:

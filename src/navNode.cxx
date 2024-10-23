@@ -4,8 +4,10 @@
 
 #include "src/navNode.h"
 
-NavNode::NavNode( LVector3f pos, float size )
+NavNode::NavNode( LPoint3f pos, LVector3f normal, float size )
     : pos( pos )
+    , normal( normal )
+    , forward_dir( LVector3f::zero() )
     , size( size )
     , h( std::numeric_limits<float>::infinity() )
     , g( std::numeric_limits<float>::infinity() )

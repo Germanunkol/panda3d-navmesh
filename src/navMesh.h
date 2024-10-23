@@ -19,7 +19,7 @@ PUBLISHED:
     NavMesh();
     ~NavMesh();
 
-    NavNode* add_node( LVector3f pos );
+    NavNode* add_node( LPoint3f pos, LVector3f normal = LVector3f::up() );
 
     void reset();
 
@@ -29,18 +29,11 @@ PUBLISHED:
     bool connectivity_check();
 
     NavPath find_path(
-            LVector3f start_pos,
-            LVector3f end_pos,
+            LPoint3f start_pos,
+            LPoint3f end_pos,
             size_t max_search_length = std::numeric_limits<size_t>::max() );
 
-    NavNode* find_nearest_node_at( LVector3f search_pos );
-
-
-    /*LPoint3f get_pos() { return this->position; }
-    void set_pos( LPoint3f position ) { this->position = position; }
-
-    LVector3f get_normal() { return this->normal; }
-    void set_normal( LVector3f normal ) { this->normal = normal; }*/
+    NavNode* find_closest_node( LPoint3f search_pos );
 
 public:
 // C++-only methods:

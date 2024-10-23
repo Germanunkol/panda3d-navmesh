@@ -16,10 +16,11 @@ class EXPORT_CLASS NavNode {
 PUBLISHED:
 // These methods are publicly accessible to Python and C++
 
-    NavNode( LVector3f pos, float max_size = 99999 );
+    NavNode( LPoint3f pos, LVector3f normal = LVector3f::up(), float max_size = 99999 );
     ~NavNode() {};
 
-    LVector3f get_pos() { return this->pos; }
+    void set_pos( LPoint3f pos ) { this->pos = pos; }
+    LPoint3f get_pos() { return this->pos; }
 
     float get_cost() const { return this->g + this->h; }
     float get_g() const { return this->g; }
@@ -28,6 +29,9 @@ PUBLISHED:
 
     NavNode* get_parent() { return this->parent; }
     void set_parent( NavNode* parent ) { this->parent = parent; }
+
+    LVector3f get_forward_dir() { return this->forward_dir; }
+    void set_forward_dir( LVector3f f ) { this->forward_dir = f; }
 
     /* Denote that neighbor can be reached from this node
      *
@@ -59,11 +63,9 @@ PUBLISHED:
     void reset();
 
     friend std::ostream& operator<<(std::ostream& os, const NavNode& n);
-    /*LPoint3f get_pos() { return this->position; }
-    void set_pos( LPoint3f position ) { this->position = position; }
 
     LVector3f get_normal() { return this->normal; }
-    void set_normal( LVector3f normal ) { this->normal = normal; }*/
+    void set_normal( LVector3f normal ) { this->normal = normal; }
 
 public:
 // C++-only methods:
@@ -71,7 +73,9 @@ public:
 
 private:
 
-    LVector3f pos;
+    LPoint3f pos;
+    LVector3f normal;
+    LVector3f forward_dir;
     float size;
     float h;
     float g;
